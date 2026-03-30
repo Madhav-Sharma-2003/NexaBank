@@ -1,0 +1,32 @@
+{% extends 'accounts/base.html' %}
+{% block title %}Login - NexaBank{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card glow p-4">
+            <div class="text-center mb-4">
+                <div style="font-size:2rem;">🔐</div>
+                <h4 class="fw-bold mt-2">Welcome Back</h4>
+                <p style="color:#475569; font-size:0.85rem;">Login to your account</p>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">Login</button>
+            </form>
+            <p class="text-center mt-4" style="color:#475569; font-size:0.85rem;">
+                Not have an account?
+                <a href="{% url 'register' %}" style="color:#6366f1; text-decoration:none; font-weight:600;">Register</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NexaBank{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background-color: #0a0f1e; color: #e2e8f0; min-height: 100vh; }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 1rem 2rem;
+        }
+        .navbar-brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff !important;
+            letter-spacing: -0.5px;
+        }
+        .navbar-brand span { color: #6366f1; }
+
+        /* Cards */
+        .card {
+            background: #0f172a;
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 16px;
+        }
+        .card-glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none; border-radius: 10px; font-weight: 600;
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none; border-radius: 10px; font-weight: 600;
+        }
+        .btn-outline-light {
+            border-radius: 10px; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-outline-light:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        /* Form inputs */
+        .form-control, .form-select {
+            background: #1e293b !important;
+            border: 1px solid rgba(99, 102, 241, 0.2) !important;
+            color: #e2e8f0 !important;
+            border-radius: 10px;
+            padding: 0.7rem 1rem;
+            transition: all 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+            outline: none;
+        }
+        .form-control::placeholder { color: #475569; }
+        .form-label { color: #94a3b8; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
+
+        /* Alerts */
+        .alert { border-radius: 12px; border: none; font-size: 0.9rem; }
+        .alert-success { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .alert-error, .alert-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+        /* Table */
+        .table { color: #e2e8f0; }
+        .table thead th {
+            color: #94a3b8;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 1px solid rgba(99,102,241,0.2);
+            padding: 0.8rem 1rem;
+        }
+        .table tbody td {
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            padding: 0.85rem 1rem;
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+        .table tbody tr:hover { background: rgba(99,102,241,0.05); }
+
+        /* Badges */
+        .badge-deposit { background: rgba(16,185,129,0.15); color: #34d399; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-withdrawal { background: rgba(239,68,68,0.15); color: #f87171; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-transfer { background: rgba(99,102,241,0.15); color: #a5b4fc; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+
+        /* Glow effect */
+        .glow { box-shadow: 0 0 40px rgba(99,102,241,0.1); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0f1e; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark">
+        <span class="navbar-brand">Nexa<span>Bank</span></span>
+        {% if user.is_authenticated %}
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-secondary" style="font-size:0.85rem;">👤 {{ user.username }}</span>
+            <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm px-3">Logout</a>
+        </div>
+        {% endif %}
+    </nav>
+
+    <div class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} py-2 px-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    const searchInput = document.getElementById('searchUsername');
+    const searchResult = document.getElementById('searchResult');
+    const notFound = document.getElementById('notFound');
+    const foundUsername = document.getElementById('foundUsername');
+    const foundAccount = document.getElementById('foundAccount');
+    const targetAccountInput = document.getElementById('targetAccountInput');
+
+    let searchTimer;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimer);
+        const query = this.value.trim();
+
+        if (query.length < 3) {
+            searchResult.style.display = 'none';
+            notFound.style.display = 'none';
+            return;
+        }
+
+        searchTimer = setTimeout(() => {
+            fetch(`/search-user/?username=${query}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.found) {
+                        foundUsername.textContent = '👤 ' + data.username;
+                        foundAccount.textContent = data.account_number + ' • ' + data.account_type;
+                        targetAccountInput.value = data.account_number;
+                        searchResult.style.display = 'block';
+                        notFound.style.display = 'none';
+                    } else {
+                        searchResult.style.display = 'none';
+                        notFound.style.display = 'block';
+                        targetAccountInput.value = '';
+                    }
+                });
+        }, 400);
+    });
+</script>
+</body>
+</html>

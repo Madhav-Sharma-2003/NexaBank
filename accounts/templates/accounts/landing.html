@@ -1,0 +1,35 @@
+{% extends 'accounts/base.html' %}
+{% block title %}Welcome - NexaBank{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="col-md-5 text-center">
+
+        <div class="mb-3" style="font-size: 3.5rem;">🏦</div>
+        <h1 class="fw-bold mb-2" style="font-size: 2.8rem; letter-spacing: -1px;">
+            Nexa<span style="color:#6366f1;">Bank</span>
+        </h1>
+        <p class="mb-1" style="color:#94a3b8; font-size:1rem;">
+            Secure. Simple. Smart.
+        </p>
+        <p class="mb-5" style="color:#475569; font-size:0.9rem;">
+            Apna account kholein aur banking ko simple banayein.
+        </p>
+
+        <div class="d-grid gap-3 col-10 mx-auto">
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg py-3">
+                New Account Kholein
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg py-3">
+                Login Karein
+            </a>
+        </div>
+
+        <div class="mt-5 d-flex justify-content-center gap-4" style="color:#334155; font-size:0.8rem;">
+            <span>🔒 Secure</span>
+            <span>⚡ Fast</span>
+            <span>💳 Easy Transfer</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

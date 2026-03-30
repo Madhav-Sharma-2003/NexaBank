@@ -1,0 +1,138 @@
+{% extends 'accounts/base.html' %}
+{% block title %}Dashboard - NexaBank{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+    <!-- Left Column -->
+    <div class="col-md-4">
+
+        <!-- Balance Card -->
+        <div class="card p-4 mb-4" style="background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid rgba(99,102,241,0.3);">
+            <p style="color:#a5b4fc; font-size:0.8rem; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Total Balance</p>
+            <h2 class="fw-bold mb-1" style="font-size:2.2rem; letter-spacing:-1px;">₹{{ account.balance }}</h2>
+            <p style="color:#a5b4fc; font-size:0.85rem;">{{ account.get_account_type_display }} Account</p>
+            <hr style="border-color:rgba(255,255,255,0.1);">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <p style="color:#a5b4fc; font-size:0.75rem; margin:0;">Account Number</p>
+                    <p style="font-size:0.85rem; font-weight:600; margin:0; letter-spacing:1px;">{{ account.account_number }}</p>
+                </div>
+                <div class="text-end">
+                    <p style="color:#a5b4fc; font-size:0.75rem; margin:0;">Holder</p>
+                    <p style="font-size:0.85rem; font-weight:600; margin:0;">{{ user.username }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deposit -->
+        <div class="card p-3 mb-3">
+            <h6 class="fw-600 mb-3" style="color:#94a3b8; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.8px;">💚 Deposit</h6>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="deposit">
+                <input type="number" name="amount" placeholder="Amount (₹)" min="1" class="form-control mb-2" required>
+                <input type="text" name="description" placeholder="Description (optional)" class="form-control mb-2">
+                <button class="btn btn-success w-100 py-2">Deposit</button>
+            </form>
+        </div>
+
+        <!-- Withdraw -->
+        <div class="card p-3 mb-3">
+            <h6 class="fw-600 mb-3" style="color:#94a3b8; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.8px;">🔴 Withdraw</h6>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="withdrawal">
+                <input type="number" name="amount" placeholder="Amount (₹)" min="1" class="form-control mb-2" required>
+                <input type="text" name="description" placeholder="Description (optional)" class="form-control mb-2">
+                <button class="btn btn-danger w-100 py-2">Withdraw</button>
+            </form>
+        </div>
+
+        <!-- Transfer -->
+<div class="card p-3">
+    <h6 class="fw-600 mb-3" style="color:#94a3b8; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.8px;">🔵 Transfer</h6>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="transfer">
+        
+        <!-- Search box -->
+        <input type="text" id="searchUsername" placeholder="Search by Username" class="form-control mb-2">
+        
+        <!-- Result -->
+        <div id="searchResult" class="mb-2" style="display:none;">
+            <div class="p-2 rounded" style="background:#1e293b; border:1px solid rgba(99,102,241,0.3);">
+                <p style="margin:0; font-size:0.8rem; color:#94a3b8;">Found:</p>
+                <p id="foundUsername" style="margin:0; font-weight:600; font-size:0.9rem;"></p>
+                <p id="foundAccount" style="margin:0; font-size:0.75rem; color:#6366f1;"></p>
+            </div>
+        </div>
+        
+        <div id="notFound" class="mb-2" style="display:none;">
+            <p style="color:#f87171; font-size:0.8rem; margin:0;">❌ User nahi mila</p>
+        </div>
+
+        <input type="text" id="targetAccountInput" name="target_account" placeholder="Account Number" class="form-control mb-2" required>
+        <input type="number" name="amount" placeholder="Amount (₹)" min="1" class="form-control mb-2" required>
+        <button class="btn btn-primary w-100 py-2">Transfer</button>
+    </form>
+</div>
+
+    </div>
+
+    <!-- Right Column - Transactions -->
+    <div class="col-md-8">
+        <div class="card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0">Transaction History</h5>
+                <span style="color:#475569; font-size:0.8rem;">{{ transactions|length }} transactions</span>
+            </div>
+
+            {% if transactions %}
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for txn in transactions %}
+                        <tr>
+                            <td>
+                                {% if txn.transaction_type == 'deposit' %}
+                                    <span class="badge-deposit">↓ Deposit</span>
+                                {% elif txn.transaction_type == 'withdrawal' %}
+                                    <span class="badge-withdrawal">↑ Withdraw</span>
+                                {% else %}
+                                    <span class="badge-transfer">⇄ Transfer</span>
+                                {% endif %}
+                            </td>
+                            <td class="fw-600">
+                                {% if txn.transaction_type == 'deposit' %}
+                                    <span style="color:#34d399;">+₹{{ txn.amount }}</span>
+                                {% else %}
+                                    <span style="color:#f87171;">-₹{{ txn.amount }}</span>
+                                {% endif %}
+                            </td>
+                            <td style="color:#64748b;">{{ txn.description|default:"—" }}</td>
+                            <td style="color:#64748b; font-size:0.82rem;">{{ txn.timestamp|date:"d M Y, H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <div style="font-size:2.5rem;">📭</div>
+                <p style="color:#334155; margin-top:1rem;">Koi transaction nahi abhi tak</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

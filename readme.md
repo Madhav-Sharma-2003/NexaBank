@@ -1,4 +1,4 @@
-<img width="1905" height="763" alt="Screenshot 2026-03-30 205150" src="https://github.com/user-attachments/assets/9b335539-74c4-47ca-b3ed-db0118475370" /><img width="1905" height="763" alt="Screenshot 2026-03-30 205150" src="https://github.com/user-attachments/assets/2517b837-1384-4542-878c-82a3a4ef7929" /># 🏦 NexaBank — Django Banking Application
+<img width="1905" height="763" alt="Screenshot 2026-03-30 205150" src="https://github.com/user-attachments/assets/2517b837-1384-4542-878c-82a3a4ef7929" /># 🏦 NexaBank — Django Banking Application
 
 A full-stack multi-user banking web application built with Django, featuring REST API, token authentication, and a clean dark UI.
 
